@@ -32,9 +32,13 @@ export class VideoViewComponent implements OnInit {
       this.currentVideo = video;
       // The <URL> is formulated from the basic URL/ID of the video.
       this.URL = this.sanitizer.bypassSecurityTrustResourceUrl('//www.youtube.com/embed/' + video);
-      // Checks if the video is bookmarked or not
+      // Checks if the video is bookmarked or not when video changes
       this.isInBookmarks = this.bookmarksService.isInBookmarks(video);
     });
+    this.bookmarksService.bookmarks$.subscribe(() => {
+      // Checks if the video is bookmarked or not when bookamrks change
+      this.isInBookmarks = this.bookmarksService.isInBookmarks(this.currentVideo);
+    })
   }
 
   // Runs when bookmark button is clicked
@@ -48,8 +52,6 @@ export class VideoViewComponent implements OnInit {
     else {
       this.bookmarksService.addBookmark(this.currentVideo).subscribe();
     }
-    // Changes the button state to its contrary
-    this.isInBookmarks = !this.isInBookmarks
   }
 
 
